@@ -1,0 +1,25 @@
+{
+  "name": "commissioner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha test/*.js --require should --reporter spec",
+    "cs": "./node_modules/.bin/jscs ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mthenw/commissioner.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mthenw/commissioner/issues"
+  },
+  "homepage": "https://github.com/mthenw/commissioner",
+  "devDependencies": {
+    "jscs": "^1.11.2",
+    "mocha": "^2.1.0",
+    "should": "^5.0.0"
+  }
+}
