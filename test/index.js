@@ -1,4 +1,4 @@
-var commisioner  = require('../')
+var commisioner  = require('../');
 
 describe('commisioner', function() {
   it('should get service address from env', function(done) {
