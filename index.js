@@ -12,4 +12,4 @@ module.exports = function(name, port, cb) {
       cb(null, addresses[0].name, addresses[0].port);
     }
   });
-}
+};
