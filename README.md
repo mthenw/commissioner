@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/travis/mthenw/commissioner.svg?style=flat)](https://travis-ci.org/mthenw/commissioner)
 [![Version](http://img.shields.io/npm/v/commissioner.svg?style=flat)](https://www.npmjs.org/package/commissioner)
 
-`commissioner` is a configuration helper for node services running on Docker and using `consul` as a service discovery. `commissioner` will help you if you're using linked containers during local development and `consul` on production.
+`commissioner` is a configuration helper for node.js services running on Docker and using `consul` as a service discovery. `commissioner` will help you if you're using linked containers during development and `consul` on production.
 
 
 ## Example
