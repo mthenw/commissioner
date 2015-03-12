@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "main": "app.js",
+  "dependencies": {
+    "redis": "0.12.1",
+    "commissioner": "*"
+  },
+  "scripts": {
+    "start": "node app.js"
+  }
+}
