@@ -7,12 +7,12 @@ describe('commisioner', function() {
 
   beforeEach(function() {
     resolveSrv = sinon.stub(dns, 'resolveSrv');
-    resolve4 = sinon.stub(dns, 'resolve4');
+    lookup = sinon.stub(dns, 'lookup');
   });
 
   afterEach(function() {
     dns.resolveSrv.restore();
-    dns.resolve4.restore();
+    dns.lookup.restore();
   });
 
   it('should query DNS with consul service domain', function(done) {
@@ -50,7 +50,7 @@ describe('commisioner', function() {
 
   it('should query DNS with service name', function(done) {
     resolveSrv.yields(new Error());
-    resolve4.yields(null, ['1.1.1.1']);
+    lookup.yields(null, '1.1.1.1');
 
     commissioner('some_service', 123, function(err, records) {
       records[0].addr.should.equal('1.1.1.1');
@@ -60,7 +60,7 @@ describe('commisioner', function() {
 
   it('should get service port from ENV', function(done) {
     resolveSrv.yields(true);
-    resolve4.yields(null, ['']);
+    lookup.yields(null, ['']);
 
     process.env['SOME_SERVICE_PORT_123_TCP_PORT'] = '567';
 
@@ -72,7 +72,7 @@ describe('commisioner', function() {
 
   it('should return error if every step failed', function(done) {
     resolveSrv.yields(true);
-    resolve4.yields(true);
+    lookup.yields(true);
 
     commissioner('some_service', 123, function(err, records) {
       err.should.be.instanceOf(Error);
@@ -82,7 +82,7 @@ describe('commisioner', function() {
 
   it('should use fallback if passed and every step failed', function(done) {
     resolveSrv.yields(true);
-    resolve4.yields(true);
+    lookup.yields(true);
 
     var options = {
       fallbackAddr: '2.2.2.2',

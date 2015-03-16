@@ -27,7 +27,7 @@ function parseDnsRecords(records) {
 }
 
 function queryDNSForLinkedContainers(name, port, options, cb) {
-  dns.resolve4(name, function(err, addresses) {
+  dns.lookup(name, function(err, addr) {
     if (err) {
       if (options && options.fallbackAddr && options.fallbackPort) {
         cb(null, [{
@@ -39,7 +39,7 @@ function queryDNSForLinkedContainers(name, port, options, cb) {
       }
     } else {
       cb(null, [{
-        addr: addresses[0],
+        addr: addr,
         port: getContainerPort(name, port)
       }]);
     }

@@ -4,7 +4,11 @@ var commissioner = require('commissioner');
 
 var client;
 commissioner('db', 6379, function(err, records) {
-  client = redis.createClient(records[0].port, records[0].addr);
+  if (err) {
+    console.log(err);
+  } else {
+    client = redis.createClient(records[0].port, records[0].addr);
+  }
 });
 
 http.createServer(function(req, res) {
