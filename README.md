@@ -21,12 +21,24 @@ commisioner(service_name, service_port, function(err, records) {
   console.log(records[0].port);
 });
 ```
-### Scenarios
 
-#### Production environment with consul
+or with fallback
 
-Commissioner returns array of `addr` and `port` records for all containers running redis (based on DNS SRV record).
+```
+var options = {
+  fallbackAddr: 'localhost',
+  fallbackPort: 6379
+};
 
-#### Local development with linked containers
+commisioner(service_name, service_port, options, function(err, records) {
+  console.log(records[0].addr);
+  console.log(records[0].port);
+});
+```
 
-Commissioner returns array with one record where `addr` and `port` are extracted from ENV variables set by Docker.
+### Strategy
+
+1. Query DNS (SRV) for `<service_name>.consul.service` and return records, if not found goto #2.
+2. Query DNS (SRV) for `<service_name>-<port>.consul.service` and return records, if not found goto 3.
+3. Query DNS (A) for `<service_name>` ([/etc/hosts in container](https://docs.docker.com/userguide/dockerlinks/#important-notes-on-docker-environment-variables)), get port from ENV ([Environment Variables in container](https://docs.docker.com/userguide/dockerlinks/#environment-variables)) and return, if not found goto 4.
+4. if fallback addr and port passed, return them, otherwise return error.

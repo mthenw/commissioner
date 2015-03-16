@@ -7,10 +7,12 @@ describe('commisioner', function() {
 
   beforeEach(function() {
     resolveSrv = sinon.stub(dns, 'resolveSrv');
+    resolve4 = sinon.stub(dns, 'resolve4');
   });
 
   afterEach(function() {
     dns.resolveSrv.restore();
+    dns.resolve4.restore();
   });
 
   it('should query DNS with consul service domain', function(done) {
@@ -27,24 +29,69 @@ describe('commisioner', function() {
     });
   });
 
-  it('should get service ip from env', function(done) {
-    resolveSrv.yields(true);
+  it(
+    'should query DNS with consul service domain (including port)',
+    function(done) {
+      resolveSrv.withArgs('some_service.service.consul').yields(new Error());
+      resolveSrv.withArgs('some_service-123.service.consul').yields(null, [{
+        name: 'addr1',
+        port: 6000
+      }]);
 
-    process.env['SOME_SERVICE_PORT_123_TCP_ADDR'] = '0.0.0.0';
+      commissioner('some_service', 123, function(err, records) {
+        dns.resolveSrv.calledWith('some_service-123.service.consul')
+          .should.be.true;
+        records[0].addr.should.equal('addr1');
+
+        done();
+      });
+    }
+  );
+
+  it('should query DNS with service name', function(done) {
+    resolveSrv.yields(new Error());
+    resolve4.yields(null, ['1.1.1.1']);
 
     commissioner('some_service', 123, function(err, records) {
-      records[0].addr.should.equal('0.0.0.0');
+      records[0].addr.should.equal('1.1.1.1');
       done();
     });
   });
 
-  it('should get service port from env', function(done) {
+  it('should get service port from ENV', function(done) {
     resolveSrv.yields(true);
+    resolve4.yields(null, ['']);
 
     process.env['SOME_SERVICE_PORT_123_TCP_PORT'] = '567';
 
     commissioner('some_service', 123, function(err, records) {
       records[0].port.should.equal('567');
+      done();
+    });
+  });
+
+  it('should return error if every step failed', function(done) {
+    resolveSrv.yields(true);
+    resolve4.yields(true);
+
+    commissioner('some_service', 123, function(err, records) {
+      err.should.be.instanceOf(Error);
+      done();
+    });
+  });
+
+  it('should use fallback if passed and every step failed', function(done) {
+    resolveSrv.yields(true);
+    resolve4.yields(true);
+
+    var options = {
+      fallbackAddr: '2.2.2.2',
+      fallbackPort: 456
+    };
+
+    commissioner('some_service', 123, options, function(err, records) {
+      records[0].addr.should.equal('2.2.2.2');
+      records[0].port.should.equal(456);
       done();
     });
   });
