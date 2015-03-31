@@ -1,7 +1,15 @@
 {
   "name": "commissioner",
   "version": "2.2.0",
-  "description": "",
+  "description": "Configuration helper for node.js services running with consul and/or Docker",
+  "license": "MIT",
+  "homepage": "https://github.com/mthenw/commissioner",
+  "keywords": [
+    "docker",
+    "consul",
+    "registrator",
+    "service-discovery"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha test/*.js --require should --reporter spec",
@@ -11,12 +19,9 @@
     "type": "git",
     "url": "https://github.com/mthenw/commissioner.git"
   },
-  "author": "",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mthenw/commissioner/issues"
   },
-  "homepage": "https://github.com/mthenw/commissioner",
   "devDependencies": {
     "jscs": "^1.11.2",
     "mocha": "^2.1.0",
