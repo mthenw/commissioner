@@ -40,5 +40,5 @@ commisioner(service_name, service_port, options, function(err, records) {
 
 1. Query DNS (SRV) for `<service_name>.consul.service` and return records, if not found goto #2.
 2. Query DNS (SRV) for `<service_name>-<port>.consul.service` and return records, if not found goto 3.
-3. Query DNS (A) for `<service_name>` ([/etc/hosts in container](https://docs.docker.com/userguide/dockerlinks/#important-notes-on-docker-environment-variables)), get port from ENV ([Environment Variables in container](https://docs.docker.com/userguide/dockerlinks/#environment-variables)) and return, if not found goto 4.
-4. if fallback addr and port passed, return them, otherwise return error.
+3. Get ADDR/PORT from ENV ([Environment Variables in container](https://docs.docker.com/userguide/dockerlinks/#environment-variables)) and return, if not found goto 4.
+4. if fallback ADDR and PORT passed, return them, otherwise return error.

@@ -1,6 +1,6 @@
 {
   "name": "commissioner",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Configuration helper for node.js services running with consul and/or Docker",
   "license": "MIT",
   "homepage": "https://github.com/mthenw/commissioner",

@@ -7,13 +7,15 @@ module.exports = function(name, port, options, cb) {
   }
 
   dns.resolveSrv(name + '.service.consul', function(err, records) {
-    if (!err) { cb(null, parseDnsRecords(records));
+    if (!err) {
+      cb(null, parseDnsRecords(records));
     } else {
       var serviceDomain = name + '-' + port + '.service.consul';
       dns.resolveSrv(serviceDomain, function(err, records) {
-        if (!err) { cb(null, parseDnsRecords(records));
+        if (!err) {
+          cb(null, parseDnsRecords(records));
         } else {
-          queryDNSForLinkedContainers(name, port, options, cb);
+          getFromDockerEnvOrFallback(name, port, options, cb);
         }
       });
     }
@@ -26,27 +28,33 @@ function parseDnsRecords(records) {
   });
 }
 
-function queryDNSForLinkedContainers(name, port, options, cb) {
-  dns.lookup(name, function(err, addr) {
-    if (err) {
-      if (options && options.fallbackAddr && options.fallbackPort) {
-        cb(null, [{
-          addr: options.fallbackAddr,
-          port: options.fallbackPort
-        }]);
-      } else {
-        cb(new Error('Couldn\'t not resolve service'));
-      }
-    } else {
+function getFromDockerEnvOrFallback(name, port, options, cb) {
+  var addr = getContainerAddr(name, port);
+  var port = getContainerPort(name, port);
+
+  if (addr && port) {
+    cb(null, [{
+      addr: addr,
+      port: port
+    }]);
+  } else {
+    if (options && options.fallbackAddr && options.fallbackPort) {
       cb(null, [{
-        addr: addr,
-        port: getContainerPort(name, port)
+        addr: options.fallbackAddr,
+        port: options.fallbackPort
       }]);
+    } else {
+      cb(new Error('Couldn\'t not resolve service'));
     }
-  });
+  }
 }
 
 function getContainerPort(name, port) {
   var key = name.toUpperCase() + '_PORT_' + port + '_TCP_PORT';
+  return process.env[key];
+}
+
+function getContainerAddr(name, port) {
+  var key = name.toUpperCase() + '_PORT_' + port + '_TCP_ADDR';
   return process.env[key];
 }
