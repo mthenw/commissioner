@@ -1,7 +1,7 @@
 var dns = require('dns');
 
 module.exports = function(name, port, options, cb) {
-  if (typeof(options) === 'function') {
+  if (typeof (options) === 'function') {
     cb = options;
     options = null;
   }
@@ -30,7 +30,7 @@ function parseDnsRecords(records) {
 
 function getFromDockerEnvOrFallback(name, port, options, cb) {
   var addr = getContainerAddr(name, port);
-  var port = getContainerPort(name, port);
+  port = getContainerPort(name, port);
 
   if (addr && port) {
     cb(null, [{

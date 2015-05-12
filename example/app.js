@@ -14,6 +14,8 @@ commissioner('db', 6379, function(err, records) {
 http.createServer(function(req, res) {
   client.incr('visits');
   client.get('visits', function(err, count) {
+    if (err) { console.log(err); }
+
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('Visited: ' + count);
   });

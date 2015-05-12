@@ -1,5 +1,0 @@
-{
-    "preset": "google",
-    "fileExtensions": [".js"],
-    "excludeFiles": ["node_modules/**", "example/**"]
-}

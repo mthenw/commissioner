@@ -13,7 +13,7 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha test/*.js --require should --reporter spec",
-    "cs": "./node_modules/.bin/jscs ."
+    "lint": "./node_modules/.bin/eslint ."
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,35 @@
     "url": "https://github.com/mthenw/commissioner/issues"
   },
   "devDependencies": {
-    "jscs": "^1.11.2",
+    "eslint": "^0.21.0",
     "mocha": "^2.1.0",
     "should": "^5.0.0",
     "sinon": "^1.13.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true
+    },
+    "rules": {
+      "quotes": [
+        2,
+        "single"
+      ],
+      "strict": [
+        2,
+        "never"
+      ],
+      "no-use-before-define": [
+        2,
+        "nofunc"
+      ],
+      "no-shadow": 0
+    },
+    "globals": {
+      "describe": false,
+      "it": false,
+      "beforeEach": false,
+      "afterEach": false
+    }
   }
 }

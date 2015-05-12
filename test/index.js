@@ -1,4 +1,5 @@
-var commissioner  = require('../');
+/*eslint handle-callback-err:0, no-unused-expressions: 0*/
+var commissioner = require('../');
 var dns = require('dns');
 var sinon = require('sinon');
 
@@ -50,8 +51,8 @@ describe('commisioner', function() {
   it('should get service IP/PORT from ENV', function(done) {
     resolveSrv.yields(new Error());
 
-    process.env['SOME_SERVICE_PORT_123_TCP_ADDR'] = '1.1.1.1';
-    process.env['SOME_SERVICE_PORT_123_TCP_PORT'] = '567';
+    process.env.SOME_SERVICE_PORT_123_TCP_ADDR = '1.1.1.1';
+    process.env.SOME_SERVICE_PORT_123_TCP_PORT = '567';
 
     commissioner('some_service', 123, function(err, records) {
       records[0].addr.should.equal('1.1.1.1');
@@ -63,7 +64,7 @@ describe('commisioner', function() {
   it('should return error if every step failed', function(done) {
     resolveSrv.yields(true);
 
-    commissioner('some_service', 123, function(err, records) {
+    commissioner('some_service', 123, function(err) {
       err.should.be.instanceOf(Error);
       done();
     });
